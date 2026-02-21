@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CV-JD Matcher</title>
+</head>
+<body>
+
+<h2>AI CV-JD Matcher</h2>
+
+<textarea id="cv" rows="6" cols="60" placeholder="Paste CV text"></textarea>
+<br><br>
+<textarea id="jd" rows="6" cols="60" placeholder="Paste JD text"></textarea>
+<br><br>
+
+<button onclick="match()">Calculate Match</button>
+
+<h3 id="result"></h3>
+<p id="words"></p>
+<p id="bigrams"></p>
+
+<script>
+function match() {
+    fetch("/match/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            cv_text: document.getElementById("cv").value,
+            jd_text: document.getElementById("jd").value
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("result").innerText =
+            "Match Score: " + data.match_score + "%";
+
+        document.getElementById("words").innerText =
+            "Matched Words: " + data.matched_words;
+
+        document.getElementById("bigrams").innerText =
+            "Matched Bigrams: " + data.matched_bigrams;
+    });
+}
+</script>
+
+</body>
+</html>
